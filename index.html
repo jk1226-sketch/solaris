@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="S.O.L.A.R.I.S." />
+  <meta name="theme-color" content="#040914" />
+  <title>S.O.L.A.R.I.S. — Personal AI Companion</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            display: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            abyss: {
+              950: '#040914',
+              900: '#071124',
+              850: '#0b1832',
+              800: '#102244',
+            },
+            solaris: {
+              cyan: '#00e5ff',
+              sky: '#38bdf8',
+              cobalt: '#2563eb',
+              indigo: '#6366f1',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Google Fonts: Plus Jakarta Sans + Space Grotesk + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Deep Cosmic Obsidian Backdrop */
+    body {
+      background-color: #040914;
+      color: #f1f7ff;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-image:
+        radial-gradient(ellipse 80% 45% at 50% 0%, rgba(0, 229, 255, 0.08) 0%, rgba(37, 99, 235, 0.04) 45%, transparent 78%),
+        radial-gradient(ellipse 55% 40% at 88% 92%, rgba(99, 102, 241, 0.06) 0%, transparent 72%);
+    }
+
+    /* Frosted Glass Pill Controls */
+    .glass-pill {
+      background: rgba(11, 24, 50, 0.65);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(56, 189, 248, 0.16);
+      transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .glass-pill:hover {
+      background: rgba(16, 34, 68, 0.88);
+      border-color: rgba(0, 229, 255, 0.38);
+    }
+
+    /* Floating Pill Composer Bar */
+    .floating-composer {
+      background: rgba(11, 24, 50, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(56, 189, 248, 0.24);
+      box-shadow:
+        0 18px 44px -12px rgba(0, 0, 0, 0.8),
+        0 0 28px -8px rgba(0, 229, 255, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .floating-composer:focus-within {
+      border-color: rgba(0, 229, 255, 0.55);
+      box-shadow:
+        0 20px 50px -12px rgba(0, 0, 0, 0.85),
+        0 0 36px -6px rgba(0, 229, 255, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    /* Asymmetric Rounded Chat Bubbles */
+    .bubble-user {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.32) 0%, rgba(37, 99, 235, 0.42) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.36);
+      border-radius: 24px 24px 6px 24px;
+      box-shadow: 0 8px 24px -6px rgba(14, 165, 233, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      font-size: 15.5px;
+      line-height: 1.56;
+    }
+
+    .bubble-ai {
+      background: rgba(11, 24, 50, 0.76);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      border-radius: 24px 24px 24px 6px;
+      box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.58), 0 0 22px -10px rgba(0, 229, 255, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      font-size: 15.5px;
+      line-height: 1.62;
+    }
+
+    /* Rich Formatted Markdown Content inside AI Bubbles */
+    .ai-rich-text p { margin-bottom: 0.6rem; }
+    .ai-rich-text p:last-child { margin-bottom: 0; }
+    .ai-rich-text strong { color: #ffffff; font-weight: 700; }
+    .ai-rich-text em { color: #bae6fd; font-style: italic; }
+    .ai-rich-text ul { list-style-type: disc; padding-left: 1.3rem; margin: 0.45rem 0 0.65rem 0; }
+    .ai-rich-text ol { list-style-type: decimal; padding-left: 1.3rem; margin: 0.45rem 0 0.65rem 0; }
+    .ai-rich-text li { margin-bottom: 0.28rem; }
+    .ai-rich-text h3 { font-weight: 700; color: #38bdf8; font-size: 1rem; margin: 0.65rem 0 0.3rem 0; }
+    .ai-rich-text code.inline-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: rgba(0, 229, 255, 0.12);
+      color: #67e8f9;
+      padding: 0.12rem 0.4rem;
+      border-radius: 0.4rem;
+    }
+    .ai-rich-text pre {
+      background: #030711;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 0.9rem;
+      padding: 0.75rem 0.95rem;
+      margin: 0.55rem 0;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    /* Bubble Spring Pop-In */
+    @keyframes bubblePop {
+      0% { opacity: 0; transform: translateY(12px) scale(0.96); }
+      70% { opacity: 1; transform: translateY(-1px) scale(1.005); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .bubble-animate {
+      animation: bubblePop 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Thinking Dots */
+    @keyframes fluidDot {
+      0%, 80%, 100% { transform: scale(0.65); opacity: 0.35; }
+      40% { transform: scale(1.2); opacity: 1; }
+    }
+    .thinking-dot:nth-child(1) { animation: fluidDot 1.3s infinite ease-in-out 0s; }
+    .thinking-dot:nth-child(2) { animation: fluidDot 1.3s infinite ease-in-out 0.18s; }
+    .thinking-dot:nth-child(3) { animation: fluidDot 1.3s infinite ease-in-out 0.36s; }
+
+    /* Custom Scrollbar */
+    .stream-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .stream-scroll::-webkit-scrollbar-track { background: transparent; }
+    .stream-scroll::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.2);
+      border-radius: 9999px;
+    }
+    .stream-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 229, 255, 0.45);
+    }
+
+    /* Full-Screen Live Voice Overlay */
+    .voice-overlay-bg {
+      background: radial-gradient(circle at 50% 42%, rgba(8, 24, 54, 0.97) 0%, rgba(4, 9, 20, 0.995) 75%);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+  </style>
+</head>
+<body class="min-h-screen h-[100dvh] flex bg-abyss-950 text-slate-100 selection:bg-solaris-cyan/25 selection:text-solaris-cyan overflow-hidden">
+
+  <!-- =======================================================================
+       LEFT MULTI-CHAT HISTORY SIDEBAR (GEMINI / CHATGPT STYLE)
+  ======================================================================== -->
+  <div id="sidebarBackdrop" class="fixed inset-0 z-30 bg-black/65 backdrop-blur-xs hidden lg:hidden"></div>
+  <aside id="chatSidebar"
+    class="fixed lg:static inset-y-0 left-0 z-40 w-[275px] flex-shrink-0 bg-abyss-900/95 lg:bg-abyss-900/75 backdrop-blur-xl border-r border-white/[0.07] flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+
+    <!-- Sidebar Top: New Chat + Collapse on Mobile -->
+    <div class="p-3.5 border-b border-white/[0.06] flex items-center gap-2">
+      <button id="newChatBtn" type="button"
+        class="flex-1 flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-full text-xs font-semibold bg-gradient-to-r from-solaris-cobalt to-solaris-cyan text-abyss-950 shadow-[0_0_18px_rgba(0,229,255,0.28)] hover:brightness-110 transition active:scale-95">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>New Chat</span>
+      </button>
+      <button id="closeSidebarBtn" type="button" aria-label="Close Sidebar"
+        class="lg:hidden w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Search Past Chats -->
+    <div class="px-3.5 pt-3 pb-2">
+      <div class="relative flex items-center">
+        <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+        </svg>
+        <input id="chatSearchInput" type="text" placeholder="Search conversations..."
+          class="w-full rounded-full bg-abyss-950/80 border border-white/10 focus:border-solaris-cyan/50 pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none" />
+      </div>
+    </div>
+
+    <!-- Scrollable Thread List -->
+    <div class="px-3.5 py-1.5 flex items-center justify-between">
+      <span class="text-[10px] font-mono uppercase tracking-[0.14em] text-slate-400">Recent Chats</span>
+      <span id="threadTotalBadge" class="text-[10px] font-mono text-solaris-cyan/80">1</span>
+    </div>
+    <div id="chatThreadList" class="flex-1 overflow-y-auto stream-scroll px-2.5 pb-3 flex flex-col gap-1">
+      <!-- Chat threads render here -->
+    </div>
+
+    <!-- Sidebar Footer: Memory Vault + API Key Quick Access -->
+    <div class="p-3 border-t border-white/[0.06] bg-abyss-950/60 flex flex-col gap-1.5">
+      <button id="sidebarMemoryBtn" type="button"
+        class="w-full flex items-center justify-between px-3.5 py-2 rounded-2xl text-xs font-medium text-slate-200 hover:bg-white/[0.06] transition">
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-solaris-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <span>Memory Vault</span>
+        </span>
+        <span id="memoryCountBadge" class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-solaris-cyan/15 text-solaris-cyan">0</span>
+      </button>
+
+      <button id="sidebarKeyVaultBtn" type="button"
+        class="w-full flex items-center justify-between px-3.5 py-2 rounded-2xl text-xs font-medium text-slate-200 hover:bg-white/[0.06] transition">
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-solaris-cyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+          </svg>
+          <span>API &amp; Public Proxy</span>
+        </span>
+        <span id="sidebarKeyStatus" class="text-[10px] font-mono text-amber-300">Setup</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- =======================================================================
+       RIGHT MAIN WORKSPACE (SPACIOUS CHAT-FIRST LAYOUT - 85%+ VERTICAL SPACE)
+  ======================================================================== -->
+  <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+
+    <!-- Compact Top Bar -->
+    <header class="relative z-20 w-full bg-abyss-950/75 backdrop-blur-xl border-b border-white/[0.06] flex-shrink-0">
+      <div class="max-w-4xl mx-auto px-3 sm:px-5 py-2 flex items-center justify-between gap-2">
+        <!-- Left: Sidebar Toggle + Brand + Connection Pill -->
+        <div class="flex items-center gap-2 min-w-0">
+          <button id="openSidebarBtn" type="button" aria-label="Open Chat History"
+            class="lg:hidden w-8 h-8 rounded-full bg-white/[0.05] hover:bg-white/10 text-slate-200 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10" />
+            </svg>
+          </button>
+
+          <h1 class="font-display font-bold tracking-[0.14em] text-sm sm:text-base text-white truncate">S.O.L.A.R.I.S.</h1>
+
+          <span id="connectionPill" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-400/25 flex-shrink-0">
+            <span id="connectionDot" class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            <span id="connectionLabel">SETUP</span>
+          </span>
+        </div>
+
+        <!-- Center: Compact Mode Pills (General / Tutor / Creative) -->
+        <div class="hidden md:flex items-center gap-1 bg-abyss-900/80 p-1 rounded-full border border-white/[0.07]">
+          <button type="button" data-mode="general"
+            class="mode-pill px-3 py-1 rounded-full text-xs font-medium transition bg-solaris-cyan/15 text-white border border-solaris-cyan/40">
+            General
+          </button>
+          <button type="button" data-mode="tutor"
+            class="mode-pill px-3 py-1 rounded-full text-xs font-medium transition text-slate-400 hover:text-white border border-transparent">
+            Tutor
+          </button>
+          <button type="button" data-mode="creative"
+            class="mode-pill px-3 py-1 rounded-full text-xs font-medium transition text-slate-400 hover:text-white border border-transparent">
+            Creative
+          </button>
+        </div>
+
+        <!-- Right: Compact Glowing Liquid-Light Orb Button (Expands to Live Voice) + Key Vault -->
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <button id="headerVoiceOrbBtn" type="button" title="Launch Full-Screen Live Voice Session"
+            class="glass-pill group flex items-center gap-2 pl-1.5 pr-3 py-1 rounded-full border-solaris-cyan/35 hover:border-solaris-cyan shadow-[0_0_18px_rgba(0,229,255,0.2)] active:scale-95">
+            <div class="relative w-6 h-6 flex items-center justify-center">
+              <canvas id="miniOrbCanvas" class="w-6 h-6"></canvas>
+            </div>
+            <span class="text-xs font-semibold text-solaris-cyan group-hover:text-white transition">Live Voice</span>
+          </button>
+
+          <button id="openKeyVaultBtn" type="button" title="API Key & Public Proxy Settings"
+            class="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-slate-200 hover:text-solaris-cyan active:scale-95">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Compact Mode Bar (Visible on small screens) -->
+      <div class="flex md:hidden items-center justify-center gap-1.5 px-3 pb-2">
+        <button type="button" data-mode="general"
+          class="mode-pill px-3 py-0.5 rounded-full text-[11px] font-medium transition bg-solaris-cyan/15 text-white border border-solaris-cyan/40">
+          General
+        </button>
+        <button type="button" data-mode="tutor"
+          class="mode-pill px-3 py-0.5 rounded-full text-[11px] font-medium transition text-slate-400 hover:text-white border border-transparent">
+          Tutor
+        </button>
+        <button type="button" data-mode="creative"
+          class="mode-pill px-3 py-0.5 rounded-full text-[11px] font-medium transition text-slate-400 hover:text-white border border-transparent">
+          Creative
+        </button>
+      </div>
+    </header>
+
+    <!-- Compact Setup Banner (Auto-hides once API Key, Public Proxy, or Demo Mode is active) -->
+    <div id="setupBanner" class="max-w-3xl w-full mx-auto px-3.5 sm:px-6 pt-2 flex-shrink-0">
+      <div class="rounded-full bg-abyss-850/90 border border-solaris-cyan/30 px-4 py-1.5 flex items-center justify-between gap-2 backdrop-blur-xl shadow-lg">
+        <p class="text-xs text-slate-200 truncate">
+          Connect your Groq key once or enable <strong class="text-solaris-cyan">Demo Mode</strong> to start chatting
+        </p>
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+          <button type="button" id="bannerDemoBtn"
+            class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/5 hover:bg-white/10 text-slate-300 transition">
+            Demo
+          </button>
+          <button type="button" id="bannerConnectBtn"
+            class="px-3 py-1 rounded-full text-[11px] font-semibold bg-solaris-cyan text-abyss-950 hover:bg-cyan-300 transition">
+            Setup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spacious Conversation Stream (Takes 85%+ of vertical viewport) -->
+    <main class="flex-1 max-w-3xl w-full mx-auto px-3.5 sm:px-6 pt-2 pb-3 flex flex-col overflow-hidden">
+      <section id="chatFeed"
+        class="flex-1 overflow-y-auto stream-scroll px-1 sm:px-2 py-3 flex flex-col gap-4">
+        <!-- Rich formatted chat bubbles render here -->
+      </section>
+
+      <!-- Floating Toast Notification -->
+      <div id="toastBar" class="hidden mx-auto mb-2 px-4 py-1.5 rounded-full text-xs font-medium bg-abyss-800/95 border border-solaris-cyan/35 text-cyan-100 flex items-center gap-2.5 shadow-xl backdrop-blur-xl">
+        <span id="toastText"></span>
+        <button type="button" id="toastCloseBtn" class="text-slate-400 hover:text-white text-sm leading-none">&times;</button>
+      </div>
+
+      <!-- Bottom Floating Pill Composer Bar -->
+      <form id="composerForm" class="floating-composer relative z-20 flex items-center gap-2 rounded-full p-1.5 pl-2 flex-shrink-0">
+        <button id="barDictateBtn" type="button" title="Voice-to-Text Dictation"
+          class="w-10 h-10 rounded-full bg-white/[0.05] hover:bg-solaris-cyan/15 text-solaris-cyan flex items-center justify-center transition active:scale-95 flex-shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" />
+          </svg>
+        </button>
+
+        <input id="promptInput" type="text" autocomplete="off"
+          placeholder="Ask S.O.L.A.R.I.S. anything..."
+          class="flex-1 bg-transparent text-[15px] text-white placeholder-slate-400 px-2 py-2 focus:outline-none" />
+
+        <button id="sendButton" type="submit" aria-label="Send message"
+          class="w-10 h-10 rounded-full bg-gradient-to-tr from-solaris-cobalt to-solaris-cyan text-abyss-950 flex items-center justify-center transition hover:brightness-110 active:scale-95 flex-shrink-0 shadow-[0_0_20px_rgba(0,229,255,0.35)]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7" />
+          </svg>
+        </button>
+      </form>
+    </main>
+  </div>
+
+  <!-- =======================================================================
+       FULL-SCREEN IMMERSIVE LIVE VOICE OVERLAY (WITH HANDS-FREE BARGE-IN)
+  ======================================================================== -->
+  <div id="liveVoiceOverlay" class="fixed inset-0 z-50 voice-overlay-bg hidden flex flex-col justify-between p-6 sm:p-10 select-none">
+    <!-- Top Live Voice Bar -->
+    <div class="max-w-3xl w-full mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-solaris-cyan animate-ping"></span>
+        <span class="font-display font-bold tracking-[0.16em] text-sm text-white">S.O.L.A.R.I.S. LIVE</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <select id="voiceSelect" aria-label="Select Companion Voice"
+          class="max-w-[140px] sm:max-w-[180px] px-3 py-1.5 rounded-full text-xs font-medium bg-abyss-850/90 border border-white/15 text-slate-200 focus:outline-none focus:border-solaris-cyan truncate cursor-pointer">
+          <option value="">System Voice</option>
+        </select>
+        <span id="liveModeBadge" class="hidden sm:inline-block px-3 py-1 rounded-full text-xs font-medium bg-solaris-cyan/15 border border-solaris-cyan/35 text-solaris-cyan">
+          General Voice
+        </span>
+      </div>
+    </div>
+
+    <!-- Center Large 60fps Liquid-Light Plasma Sphere + Real-Time Subtitles -->
+    <div class="flex-1 flex flex-col items-center justify-center max-w-xl w-full mx-auto text-center">
+      <div id="liveOrbTrigger" role="button" tabindex="0" aria-label="Tap orb to interrupt or speak"
+        class="relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center cursor-pointer group focus:outline-none">
+        <div id="liveOrbHalo" class="absolute inset-4 rounded-full bg-gradient-to-tr from-solaris-cobalt/45 via-solaris-cyan/35 to-solaris-indigo/30 blur-3xl transition-all duration-500"></div>
+        <canvas id="liveOrbCanvas" class="relative w-full h-full"></canvas>
+      </div>
+
+      <!-- Real-Time Audio Waveform Bars -->
+      <div id="waveformBars" class="flex items-center justify-center gap-1.5 h-7 my-2">
+        <span class="wave-bar w-1 h-2 rounded-full bg-solaris-cyan/80 transition-all duration-75"></span>
+        <span class="wave-bar w-1 h-3 rounded-full bg-solaris-cyan/90 transition-all duration-75"></span>
+        <span class="wave-bar w-1 h-4 rounded-full bg-white transition-all duration-75"></span>
+        <span class="wave-bar w-1 h-5 rounded-full bg-solaris-cyan transition-all duration-75"></span>
+        <span class="wave-bar w-1 h-3 rounded-full bg-solaris-sky transition-all duration-75"></span>
+        <span class="wave-bar w-1 h-4 rounded-full bg-solaris-cyan transition-all duration-75"></span>
+        <span class="wave-bar w-1 h-2 rounded-full bg-solaris-cyan/80 transition-all duration-75"></span>
+      </div>
+
+      <p id="liveStatusTitle" class="text-sm font-semibold tracking-wide text-solaris-cyan mt-1">
+        Listening...
+      </p>
+      <p id="liveSubtitleText" class="text-sm sm:text-base text-slate-200/90 max-w-md mt-2.5 min-h-[3.2rem] leading-relaxed px-2">
+        Speak naturally—interrupt me anytime just by speaking or tapping the orb.
+      </p>
+    </div>
+
+    <!-- Bottom Controls: Mute & End Voice -->
+    <div class="max-w-md w-full mx-auto flex items-center justify-center gap-4 pb-2">
+      <button id="liveMuteBtn" type="button"
+        class="flex items-center gap-2 px-5 py-3.5 rounded-full text-sm font-semibold bg-white/10 hover:bg-white/15 border border-white/15 text-white transition active:scale-95">
+        <svg class="w-5 h-5 text-solaris-cyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" />
+        </svg>
+        <span id="liveMuteLabel">Mute</span>
+      </button>
+
+      <button id="endLiveVoiceBtn" type="button"
+        class="flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-bold bg-rose-500 hover:bg-rose-400 text-white shadow-[0_0_28px_rgba(244,63,94,0.45)] transition active:scale-95">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <span>End Voice</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       API KEY VAULT & PUBLIC PROXY CONFIGURATION MODAL
+  ======================================================================== -->
+  <div id="keyVaultBackdrop" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto stream-scroll rounded-[28px] bg-abyss-900/95 border border-solaris-cyan/25 shadow-2xl">
+      <div class="px-6 py-4 border-b border-white/[0.08] flex items-center justify-between sticky top-0 bg-abyss-900/95 backdrop-blur-md z-10">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-solaris-cyan/15 border border-solaris-cyan/35 flex items-center justify-center text-solaris-cyan">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="font-bold text-sm text-white">S.O.L.A.R.I.S. Connection &amp; Key Vault</h2>
+            <p class="text-xs text-slate-400">Personal Key Storage or Public Zero-Key Proxy</p>
+          </div>
+        </div>
+        <button id="closeKeyVaultBtn" type="button" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 flex flex-col gap-4">
+        <!-- Option 1: Personal Groq Key (Saved Once in Browser) -->
+        <div>
+          <label for="groqKeyInput" class="block text-xs font-semibold text-slate-200 mb-1">1. Personal Groq API Key (Saved Once on This Device)</label>
+          <p class="text-[11px] text-slate-400 mb-2">Paste your free <code class="text-solaris-cyan">gsk_...</code> key once. It stays saved in your browser so you never have to paste it again.</p>
+          <div class="relative flex items-center">
+            <input id="groqKeyInput" type="password" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxx"
+              class="w-full rounded-2xl bg-abyss-950 border border-white/15 focus:border-solaris-cyan px-4 py-2.5 pr-16 text-xs font-mono text-white placeholder-slate-500 focus:outline-none" />
+            <button type="button" id="toggleKeyVisibilityBtn"
+              class="absolute right-3 px-2.5 py-1 rounded-full text-[11px] font-medium text-slate-400 hover:text-solaris-cyan bg-white/5">
+              Show
+            </button>
+          </div>
+        </div>
+
+        <!-- Option 2: Public Zero-Key Proxy URL (Cloudflare Worker) -->
+        <div>
+          <label for="proxyUrlInput" class="block text-xs font-semibold text-slate-200 mb-1">2. Public Proxy URL (Optional — For Sharing With Everyone)</label>
+          <p class="text-[11px] text-slate-400 mb-2">
+            Want anyone to use S.O.L.A.R.I.S. without entering an API key while keeping your key 100% hidden? Host a free Cloudflare Worker (100,000 free requests/day) and paste its URL here or inside <code class="text-solaris-cyan">EMBEDDED_WORKER_URL</code> in the code.
+          </p>
+          <input id="proxyUrlInput" type="url" placeholder="https://solaris-proxy.your-name.workers.dev"
+            class="w-full rounded-2xl bg-abyss-950 border border-white/15 focus:border-solaris-cyan px-4 py-2.5 text-xs font-mono text-white placeholder-slate-500 focus:outline-none" />
+        </div>
+
+        <!-- Intelligence Model Selector -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="groqModelSelect" class="text-xs font-semibold text-slate-200">AI Intelligence Model</label>
+            <button type="button" id="refreshModelsBtn"
+              class="text-[11px] font-medium text-solaris-cyan hover:underline">
+              Refresh Models
+            </button>
+          </div>
+          <select id="groqModelSelect"
+            class="w-full rounded-2xl bg-abyss-950 border border-white/15 focus:border-solaris-cyan px-4 py-2.5 text-xs text-white focus:outline-none">
+            <option value="openai/gpt-oss-20b">GPT-OSS 20B (Ultra-Fast Companion)</option>
+            <option value="openai/gpt-oss-120b">GPT-OSS 120B (Deep Reasoning &amp; Tutor)</option>
+            <option value="qwen/qwen3.8-27b">Qwen 3.8 27B (Creative &amp; Literature)</option>
+          </select>
+        </div>
+
+        <!-- Key-Free Demo Mode Switch -->
+        <div class="flex items-center justify-between rounded-2xl bg-abyss-950/80 border border-white/10 px-4 py-3">
+          <div>
+            <p class="text-xs font-semibold text-slate-200">Key-Free Demo / Fallback Mode</p>
+            <p class="text-[11px] text-slate-400">Preview voice, live orb &amp; built-in study answers offline</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="demoModeCheckbox" type="checkbox" class="sr-only peer" />
+            <div class="w-10 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-solaris-cyan"></div>
+          </label>
+        </div>
+
+        <!-- Collapsible Cloudflare Worker Proxy Setup Guide -->
+        <details class="rounded-2xl bg-abyss-950/70 border border-white/10 px-4 py-3 text-xs text-slate-300">
+          <summary class="font-semibold text-solaris-cyan cursor-pointer select-none">
+            How to make S.O.L.A.R.I.S. work for all public visitors without showing your key
+          </summary>
+          <div class="mt-2.5 space-y-2 text-[11px] text-slate-400 leading-relaxed">
+            <p>Never paste a raw <code class="text-slate-200">gsk_...</code> key directly inside public HTML code, because anyone can view page source and steal it. Instead, use a free <strong class="text-white">Cloudflare Worker</strong> (takes 2 minutes):</p>
+            <ol class="list-decimal pl-4 space-y-1">
+              <li>Sign in at <strong class="text-slate-200">dash.cloudflare.com</strong> (free) &rarr; <strong class="text-slate-200">Workers &amp; Pages</strong> &rarr; <strong class="text-slate-200">Create Worker</strong>.</li>
+              <li>In Worker <strong class="text-slate-200">Settings &rarr; Variables &amp; Secrets</strong>, add a secret named <code class="text-solaris-cyan">GROQ_API_KEY</code> with your <code class="text-slate-200">gsk_...</code> key.</li>
+              <li>Paste this 12-line relay into the Worker editor and click <strong class="text-slate-200">Deploy</strong>:</li>
+            </ol>
+            <pre class="bg-black/80 border border-white/10 rounded-xl p-2.5 text-[10px] text-cyan-200 overflow-x-auto">export default {
+  async fetch(req, env) {
+    if (req.method === "OPTIONS") return new Response(null, { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
+    const body = await req.text();
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${env.GROQ_API_KEY}` },
+      body
+    });
+    return new Response(res.body, { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
+  }
+};</pre>
+            <p>4. Copy your <code class="text-solaris-cyan">https://...workers.dev</code> link into <code class="text-solaris-cyan">EMBEDDED_WORKER_URL</code> at line 356 of this HTML file—now everyone can use S.O.L.A.R.I.S. instantly!</p>
+          </div>
+        </details>
+
+        <div id="testConnectionResult" class="hidden rounded-2xl px-4 py-2.5 text-xs border"></div>
+
+        <div class="flex items-center gap-2.5 pt-1">
+          <button id="testConnectionBtn" type="button"
+            class="flex-1 py-3 px-4 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 transition active:scale-95">
+            Test Connection
+          </button>
+          <button id="saveKeyVaultBtn" type="button"
+            class="flex-1 py-3 px-4 rounded-full text-xs font-bold bg-gradient-to-r from-solaris-cobalt to-solaris-cyan text-abyss-950 hover:brightness-110 transition active:scale-95 shadow-[0_0_20px_rgba(0,229,255,0.28)]">
+            Save &amp; Activate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       PERSISTENT MEMORY VAULT DRAWER
+  ======================================================================== -->
+  <div id="memoryBackdrop" class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200"></div>
+  <aside id="memoryDrawer"
+    class="fixed top-0 right-0 z-50 h-full w-full sm:w-[390px] bg-abyss-900/95 backdrop-blur-xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-5 border-b border-white/10 flex items-center justify-between">
+      <div>
+        <h2 class="font-bold text-sm text-white">Global Memory Vault</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Facts remembered across all your chat threads</p>
+      </div>
+      <button id="closeMemoryBtn" type="button" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <form id="addMemoryForm" class="p-4 border-b border-white/10 bg-abyss-950/60 flex gap-2">
+      <input id="memoryNoteInput" type="text" placeholder="e.g., I am a Class 10 student..."
+        class="flex-1 rounded-full bg-abyss-850 border border-white/15 px-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-solaris-cyan" />
+      <button type="submit"
+        class="px-4 py-2 rounded-full bg-solaris-cyan hover:bg-cyan-300 text-abyss-950 font-bold text-xs transition active:scale-95">
+        Add
+      </button>
+    </form>
+
+    <div class="flex-1 overflow-y-auto stream-scroll p-4 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-300">Saved Memories</span>
+        <button id="clearNotesBtn" type="button" class="text-[11px] text-solaris-cyan hover:underline">Clear All</button>
+      </div>
+      <div id="memoryNotesList" class="flex flex-col gap-2"></div>
+    </div>
+  </aside>
+
+  <script>
+    /**
+     * =========================================================================
+     * ZERO-FRICTION DEPLOYMENT CONFIGURATION
+     * =========================================================================
+     * 1. FOR PUBLIC SHARING (RECOMMENDED): Paste your free Cloudflare Worker URL
+     *    inside EMBEDDED_WORKER_URL below. Every visitor will be able to chat
+     *    instantly without entering an API key, while your key stays 100% hidden!
+     * 2. FOR PERSONAL USE: Leave these blank and paste your Groq key once in the
+     *    in-app Key Vault—it saves permanently in your browser's localStorage.
+     */
+    const EMBEDDED_WORKER_URL = ''; // e.g. 'https://solaris-proxy.your-name.workers.dev'
+    const EMBEDDED_API_KEY = '';    // Optional: only use for private personal builds
+
+    const STORAGE_KEYS = {
+      GROQ_KEY: 'solaris_groq_key',
+      PROXY_URL: 'solaris_proxy_url',
+      GROQ_MODEL: 'solaris_groq_model',
+      DEMO_MODE: 'solaris_demo_mode',
+      THREADS: 'solaris_threads_v6',
+      ACTIVE_THREAD: 'solaris_active_thread_v6',
+      NOTES: 'solaris_notes_v6',
+      MODE: 'solaris_mode_v6',
+      VOICE_URI: 'solaris_voice_uri_v6'
+    };
+
+    const ACTIVE_DEFAULT_MODELS = [
+      { id: 'openai/gpt-oss-20b', label: 'GPT-OSS 20B (Ultra-Fast Companion)' },
+      { id: 'openai/gpt-oss-120b', label: 'GPT-OSS 120B (Deep Reasoning & Tutor)' },
+      { id: 'qwen/qwen3.8-27b', label: 'Qwen 3.8 27B (Creative & Literature)' }
+    ];
+
+    const DEPRECATED_MODELS = new Set([
+      'llama-3.3-70b-versatile',
+      'llama-3.1-8b-instant',
+      'qwen/qwen3-32b',
+      'llama3-8b-8192',
+      'llama3-70b-8192',
+      'mixtral-8x7b-32768'
+    ]);
+
+    const MODES = {
+      general: {
+        label: 'General',
+        voicePrompt: 'You are in a live voice call. Respond naturally like a warm, intelligent friend in 1 to 2 short spoken sentences. Never use markdown, bullet points, or long paragraphs.',
+        textPrompt: 'Operate in General Companion mode: warm, perceptive, clear, and helpful. Use clean formatting with bold highlights or bullet points when helpful.'
+      },
+      tutor: {
+        label: 'Tutor',
+        voicePrompt: 'You are in a live voice study session. Explain the topic clearly in 2 to 3 concise spoken sentences and ask a quick check-in question. No markdown symbols.',
+        textPrompt: 'Operate in Study Tutor mode: explain concepts clearly step-by-step with stanzas/examples, key themes, and exam-ready takeaways. Pay close attention to academic subjects (e.g., if asked about "English Fog poem Class 10", explain Carl Sandburg’s poem "Fog" from CBSE Class 10 First Flight—its cat metaphor, imagery, and poetic devices—not meteorology).'
+      },
+      creative: {
+        label: 'Creative',
+        voicePrompt: 'You are in a live voice brainstorming session. React enthusiastically in 1 to 2 crisp spoken sentences and pitch one bold next step. No markdown symbols.',
+        textPrompt: 'Operate in Creative Partner mode: sharpen ideas, brainstorm fresh angles, and propose vivid, actionable next steps.'
+      }
+    };
+
+    let initialModel = localStorage.getItem(STORAGE_KEYS.GROQ_MODEL) || 'openai/gpt-oss-20b';
+    if (DEPRECATED_MODELS.has(initialModel)) {
+      initialModel = 'openai/gpt-oss-20b';
+      localStorage.setItem(STORAGE_KEYS.GROQ_MODEL, initialModel);
+    }
+
+    const state = {
+      groqKey: localStorage.getItem(STORAGE_KEYS.GROQ_KEY) || EMBEDDED_API_KEY,
+      proxyUrl: localStorage.getItem(STORAGE_KEYS.PROXY_URL) || EMBEDDED_WORKER_URL,
+      groqModel: initialModel,
+      demoMode: localStorage.getItem(STORAGE_KEYS.DEMO_MODE) === 'true',
+      mode: localStorage.getItem(STORAGE_KEYS.MODE) || 'general',
+      selectedVoiceURI: localStorage.getItem(STORAGE_KEYS.VOICE_URI) || '',
+      threads: [],
+      activeThreadId: localStorage.getItem(STORAGE_KEYS.ACTIVE_THREAD) || '',
+      voiceHistory: [],
+      memoryNotes: [],
+      audioUnlocked: false,
+      liveActive: false,
+      liveMuted: false,
+      liveStatus: 'idle',
+      barDictating: false,
+      micEnergy: 0
+    };
+
+    // Load saved threads & memory notes
+    try {
+      const savedThreads = JSON.parse(localStorage.getItem(STORAGE_KEYS.THREADS) || '[]');
+      if (Array.isArray(savedThreads)) state.threads = savedThreads;
+      const savedNotes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '[]');
+      if (Array.isArray(savedNotes)) state.memoryNotes = savedNotes;
+    } catch (e) {}
+
+    // Ensure at least one conversation thread exists
+    function createThreadObject(title = 'New Chat') {
+      return {
+        id: 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        title,
+        updatedAt: Date.now(),
+        messages: []
+      };
+    }
+
+    if (state.threads.length === 0) {
+      const first = createThreadObject('New Chat');
+      state.threads.push(first);
+      state.activeThreadId = first.id;
+    } else if (!state.threads.some((t) => t.id === state.activeThreadId)) {
+      state.activeThreadId = state.threads[0].id;
+    }
+
+    function getActiveThread() {
+      let thread = state.threads.find((t) => t.id === state.activeThreadId);
+      if (!thread) {
+        thread = createThreadObject('New Chat');
+        state.threads.unshift(thread);
+        state.activeThreadId = thread.id;
+      }
+      return thread;
+    }
+
+    // --- DOM References ---
+    const chatSidebar = document.getElementById('chatSidebar');
+    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+    const openSidebarBtn = document.getElementById('openSidebarBtn');
+    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const chatSearchInput = document.getElementById('chatSearchInput');
+    const chatThreadList = document.getElementById('chatThreadList');
+    const threadTotalBadge = document.getElementById('threadTotalBadge');
+    const sidebarMemoryBtn = document.getElementById('sidebarMemoryBtn');
+    const sidebarKeyVaultBtn = document.getElementById('sidebarKeyVaultBtn');
+    const sidebarKeyStatus = document.getElementById('sidebarKeyStatus');
+
+    const connectionPill = document.getElementById('connectionPill');
+    const connectionDot = document.getElementById('connectionDot');
+    const connectionLabel = document.getElementById('connectionLabel');
+    const setupBanner = document.getElementById('setupBanner');
+    const bannerConnectBtn = document.getElementById('bannerConnectBtn');
+    const bannerDemoBtn = document.getElementById('bannerDemoBtn');
+
+    const headerVoiceOrbBtn = document.getElementById('headerVoiceOrbBtn');
+    const modePills = document.querySelectorAll('.mode-pill');
+
+    const chatFeed = document.getElementById('chatFeed');
+    const composerForm = document.getElementById('composerForm');
+    const promptInput = document.getElementById('promptInput');
+    const barDictateBtn = document.getElementById('barDictateBtn');
+
+    // Live Voice Overlay
+    const liveVoiceOverlay = document.getElementById('liveVoiceOverlay');
+    const voiceSelect = document.getElementById('voiceSelect');
+    const liveModeBadge = document.getElementById('liveModeBadge');
+    const liveOrbTrigger = document.getElementById('liveOrbTrigger');
+    const liveOrbHalo = document.getElementById('liveOrbHalo');
+    const liveStatusTitle = document.getElementById('liveStatusTitle');
+    const liveSubtitleText = document.getElementById('liveSubtitleText');
+    const liveMuteBtn = document.getElementById('liveMuteBtn');
+    const liveMuteLabel = document.getElementById('liveMuteLabel');
+    const endLiveVoiceBtn = document.getElementById('endLiveVoiceBtn');
+    const waveBars = document.querySelectorAll('.wave-bar');
+
+    // Key Vault Modal
+    const openKeyVaultBtn = document.getElementById('openKeyVaultBtn');
+    const closeKeyVaultBtn = document.getElementById('closeKeyVaultBtn');
+    const keyVaultBackdrop = document.getElementById('keyVaultBackdrop');
+    const groqKeyInput = document.getElementById('groqKeyInput');
+    const proxyUrlInput = document.getElementById('proxyUrlInput');
+    const toggleKeyVisibilityBtn = document.getElementById('toggleKeyVisibilityBtn');
+    const groqModelSelect = document.getElementById('groqModelSelect');
+    const refreshModelsBtn = document.getElementById('refreshModelsBtn');
+    const demoModeCheckbox = document.getElementById('demoModeCheckbox');
+    const testConnectionBtn = document.getElementById('testConnectionBtn');
+    const testConnectionResult = document.getElementById('testConnectionResult');
+    const saveKeyVaultBtn = document.getElementById('saveKeyVaultBtn');
+
+    // Memory Drawer
+    const closeMemoryBtn = document.getElementById('closeMemoryBtn');
+    const memoryBackdrop = document.getElementById('memoryBackdrop');
+    const memoryDrawer = document.getElementById('memoryDrawer');
+    const addMemoryForm = document.getElementById('addMemoryForm');
+    const memoryNoteInput = document.getElementById('memoryNoteInput');
+    const memoryNotesList = document.getElementById('memoryNotesList');
+    const memoryCountBadge = document.getElementById('memoryCountBadge');
+    const clearNotesBtn = document.getElementById('clearNotesBtn');
+
+    // Toast
+    const toastBar = document.getElementById('toastBar');
+    const toastText = document.getElementById('toastText');
+    const toastCloseBtn = document.getElementById('toastCloseBtn');
+
+    let toastTimeout = null;
+    function showToast(message) {
+      toastText.textContent = message;
+      toastBar.classList.remove('hidden');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toastBar.classList.add('hidden'), 4200);
+    }
+    toastCloseBtn.addEventListener('click', () => toastBar.classList.add('hidden'));
+
+    function persistState() {
+      localStorage.setItem(STORAGE_KEYS.GROQ_KEY, state.groqKey);
+      localStorage.setItem(STORAGE_KEYS.PROXY_URL, state.proxyUrl);
+      localStorage.setItem(STORAGE_KEYS.GROQ_MODEL, state.groqModel);
+      localStorage.setItem(STORAGE_KEYS.DEMO_MODE, String(state.demoMode));
+      localStorage.setItem(STORAGE_KEYS.MODE, state.mode);
+      localStorage.setItem(STORAGE_KEYS.VOICE_URI, state.selectedVoiceURI);
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_THREAD, state.activeThreadId);
+      localStorage.setItem(STORAGE_KEYS.THREADS, JSON.stringify(state.threads.slice(0, 40)));
+      localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(state.memoryNotes));
+      syncConnectionStatus();
+      renderSidebarThreads();
+      renderMemoryVault();
+    }
+
+    function getActiveEndpoint() {
+      const proxy = (state.proxyUrl || EMBEDDED_WORKER_URL || '').trim();
+      const key = (state.groqKey || EMBEDDED_API_KEY || '').trim();
+      if (proxy.startsWith('http')) {
+        return { type: 'proxy', url: proxy, key: '' };
+      }
+      if (key.length > 12) {
+        return { type: 'direct', url: 'https://api.groq.com/openai/v1/chat/completions', key };
+      }
+      return { type: 'none', url: '', key: '' };
+    }
+
+    function syncConnectionStatus() {
+      const ep = getActiveEndpoint();
+      if (ep.type === 'proxy') {
+        connectionPill.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-400/30';
+        connectionDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+        connectionLabel.textContent = 'PUBLIC LIVE';
+        sidebarKeyStatus.textContent = 'Proxy Active';
+        sidebarKeyStatus.className = 'text-[10px] font-mono text-emerald-300';
+        setupBanner.classList.add('hidden');
+      } else if (ep.type === 'direct') {
+        connectionPill.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium uppercase tracking-wider bg-emerald-500/15 text-emerald-300 border border-emerald-400/30';
+        connectionDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+        connectionLabel.textContent = 'LIVE';
+        sidebarKeyStatus.textContent = 'Key Saved';
+        sidebarKeyStatus.className = 'text-[10px] font-mono text-emerald-300';
+        setupBanner.classList.add('hidden');
+      } else if (state.demoMode) {
+        connectionPill.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium uppercase tracking-wider bg-solaris-cyan/15 text-solaris-cyan border border-solaris-cyan/30';
+        connectionDot.className = 'w-1.5 h-1.5 rounded-full bg-solaris-cyan';
+        connectionLabel.textContent = 'DEMO';
+        sidebarKeyStatus.textContent = 'Demo Mode';
+        sidebarKeyStatus.className = 'text-[10px] font-mono text-solaris-cyan';
+        setupBanner.classList.add('hidden');
+      } else {
+        connectionPill.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-400/25';
+        connectionDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse';
+        connectionLabel.textContent = 'SETUP';
+        sidebarKeyStatus.textContent = 'Setup';
+        sidebarKeyStatus.className = 'text-[10px] font-mono text-amber-300';
+        setupBanner.classList.remove('hidden');
+      }
+    }
+
+    function updateModeUI() {
+      modePills.forEach((pill) => {
+        const isSelected = pill.getAttribute('data-mode') === state.mode;
+        pill.className = isSelected
+          ? 'mode-pill px-3 py-0.5 md:py-1 rounded-full text-[11px] md:text-xs font-medium transition bg-solaris-cyan/15 text-white border border-solaris-cyan/40'
+          : 'mode-pill px-3 py-0.5 md:py-1 rounded-full text-[11px] md:text-xs font-medium transition text-slate-400 hover:text-white border border-transparent';
+      });
+      const modeObj = MODES[state.mode] || MODES.general;
+      liveModeBadge.textContent = `${modeObj.label} Voice`;
+    }
+
+    modePills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        state.mode = pill.getAttribute('data-mode');
+        updateModeUI();
+        persistState();
+      });
+    });
+
+    // =========================================================================
+    // MULTI-CHAT HISTORY SIDEBAR (GEMINI / CHATGPT STYLE)
+    // =========================================================================
+
+    function openSidebarMobile() {
+      chatSidebar.classList.remove('-translate-x-full');
+      sidebarBackdrop.classList.remove('hidden');
+    }
+
+    function closeSidebarMobile() {
+      chatSidebar.classList.add('-translate-x-full');
+      sidebarBackdrop.classList.add('hidden');
+    }
+
+    openSidebarBtn.addEventListener('click', openSidebarMobile);
+    closeSidebarBtn.addEventListener('click', closeSidebarMobile);
+    sidebarBackdrop.addEventListener('click', closeSidebarMobile);
+
+    function autoGenerateThreadTitle(firstPrompt) {
+      const cleaned = firstPrompt
+        .replace(/^(can you|please|explain|tell me about|what is|how does|help me with)\s+/i, '')
+        .replace(/[?!.]+$/g, '')
+        .trim();
+      if (!cleaned) return 'New Chat';
+      const words = cleaned.split(/\s+/).slice(0, 5).join(' ');
+      return words.charAt(0).toUpperCase() + words.slice(1);
+    }
+
+    newChatBtn.addEventListener('click', () => {
+      const existingEmpty = state.threads.find((t) => t.messages.length === 0);
+      if (existingEmpty) {
+        state.activeThreadId = existingEmpty.id;
+      } else {
+        const fresh = createThreadObject('New Chat');
+        state.threads.unshift(fresh);
+        state.activeThreadId = fresh.id;
+      }
+      persistState();
+      renderAllMessages();
+      closeSidebarMobile();
+      promptInput.focus();
+    });
+
+    chatSearchInput.addEventListener('input', renderSidebarThreads);
+
+    function renderSidebarThreads() {
+      const query = chatSearchInput.value.trim().toLowerCase();
+      const filtered = query
+        ? state.threads.filter((t) =>
+            t.title.toLowerCase().includes(query) ||
+            t.messages.some((m) => m.text.toLowerCase().includes(query))
+          )
+        : state.threads;
+
+      threadTotalBadge.textContent = state.threads.length;
+      chatThreadList.innerHTML = '';
+
+      if (filtered.length === 0) {
+        chatThreadList.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">No matching chats</p>`;
+        return;
+      }
+
+      filtered.forEach((thread) => {
+        const isActive = thread.id === state.activeThreadId;
+        const item = document.createElement('div');
+        item.className = isActive
+          ? 'group flex items-center justify-between gap-1.5 px-3 py-2.5 rounded-2xl bg-solaris-cyan/15 border border-solaris-cyan/35 text-white cursor-pointer transition'
+          : 'group flex items-center justify-between gap-1.5 px-3 py-2.5 rounded-2xl hover:bg-white/[0.05] border border-transparent text-slate-300 cursor-pointer transition';
+
+        const left = document.createElement('div');
+        left.className = 'flex items-center gap-2 min-w-0 flex-1';
+        left.innerHTML = `
+          <svg class="w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-solaris-cyan' : 'text-slate-500'}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h8M8 14h5m-9 6l2.5-2.5H19a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        `;
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'text-xs font-medium truncate';
+        titleSpan.textContent = thread.title || 'New Chat';
+        left.appendChild(titleSpan);
+
+        left.addEventListener('click', () => {
+          state.activeThreadId = thread.id;
+          persistState();
+          renderAllMessages();
+          closeSidebarMobile();
+        });
+
+        // Rename & Delete Actions
+        const actions = document.createElement('div');
+        actions.className = 'flex items-center gap-0.5 opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition';
+
+        const renameBtn = document.createElement('button');
+        renameBtn.type = 'button';
+        renameBtn.title = 'Rename Chat';
+        renameBtn.className = 'p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-solaris-cyan';
+        renameBtn.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M4 20h4.586a1 1 0 00.707-.293l9.414-9.414a2 2 0 000-2.828l-1.172-1.172a2 2 0 00-2.828 0L5.293 15.707A1 1 0 005 16.414V20z" /></svg>`;
+        renameBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.value = thread.title;
+          input.className = 'w-full bg-abyss-950 border border-solaris-cyan rounded-lg px-2 py-0.5 text-xs text-white focus:outline-none';
+          left.replaceChild(input, titleSpan);
+          input.focus();
+          input.select();
+
+          const commitRename = () => {
+            const nextTitle = input.value.trim();
+            if (nextTitle) thread.title = nextTitle;
+            persistState();
+          };
+          input.addEventListener('blur', commitRename);
+          input.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter') { ev.preventDefault(); commitRename(); }
+            if (ev.key === 'Escape') renderSidebarThreads();
+          });
+        });
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.title = 'Delete Chat';
+        delBtn.className = 'p-1 rounded-lg hover:bg-rose-500/20 text-slate-400 hover:text-rose-300';
+        delBtn.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
+        delBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          state.threads = state.threads.filter((t) => t.id !== thread.id);
+          if (state.threads.length === 0) {
+            const replacement = createThreadObject('New Chat');
+            state.threads.push(replacement);
+            state.activeThreadId = replacement.id;
+          } else if (state.activeThreadId === thread.id) {
+            state.activeThreadId = state.threads[0].id;
+          }
+          persistState();
+          renderAllMessages();
+        });
+
+        actions.appendChild(renameBtn);
+        actions.appendChild(delBtn);
+
+        item.appendChild(left);
+        item.appendChild(actions);
+        chatThreadList.appendChild(item);
+      });
+    }
+
+    // =========================================================================
+    // GROQ KEY VAULT & PUBLIC PROXY CONFIGURATION
+    // =========================================================================
+
+    function populateModelSelect(modelsArray, selectedId) {
+      groqModelSelect.innerHTML = '';
+      modelsArray.forEach((m) => {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = m.label || m.id;
+        if (m.id === selectedId) opt.selected = true;
+        groqModelSelect.appendChild(opt);
+      });
+      if (!groqModelSelect.value && modelsArray.length > 0) {
+        groqModelSelect.value = modelsArray[0].id;
+      }
+    }
+
+    function openKeyVault() {
+      groqKeyInput.value = state.groqKey;
+      proxyUrlInput.value = state.proxyUrl;
+      populateModelSelect(ACTIVE_DEFAULT_MODELS, state.groqModel);
+      if (groqModelSelect.value !== state.groqModel) {
+        const customOpt = document.createElement('option');
+        customOpt.value = state.groqModel;
+        customOpt.textContent = state.groqModel;
+        customOpt.selected = true;
+        groqModelSelect.appendChild(customOpt);
+      }
+      demoModeCheckbox.checked = state.demoMode;
+      testConnectionResult.classList.add('hidden');
+      keyVaultBackdrop.classList.remove('hidden');
+    }
+
+    function closeKeyVault() {
+      keyVaultBackdrop.classList.add('hidden');
+    }
+
+    openKeyVaultBtn.addEventListener('click', openKeyVault);
+    sidebarKeyVaultBtn.addEventListener('click', () => { closeSidebarMobile(); openKeyVault(); });
+    bannerConnectBtn.addEventListener('click', openKeyVault);
+    closeKeyVaultBtn.addEventListener('click', closeKeyVault);
+    keyVaultBackdrop.addEventListener('click', (e) => {
+      if (e.target === keyVaultBackdrop) closeKeyVault();
+    });
+
+    bannerDemoBtn.addEventListener('click', () => {
+      state.demoMode = true;
+      persistState();
+      showToast('Demo Mode active! Ask anything or test Tutor mode.');
+    });
+
+    toggleKeyVisibilityBtn.addEventListener('click', () => {
+      if (groqKeyInput.type === 'password') {
+        groqKeyInput.type = 'text';
+        toggleKeyVisibilityBtn.textContent = 'Hide';
+      } else {
+        groqKeyInput.type = 'password';
+        toggleKeyVisibilityBtn.textContent = 'Show';
+      }
+    });
+
+    refreshModelsBtn.addEventListener('click', async () => {
+      const candidateKey = groqKeyInput.value.trim() || state.groqKey.trim();
+      if (!candidateKey) {
+        showToast('Paste your Groq API key first to fetch live models.');
+        return;
+      }
+      refreshModelsBtn.textContent = 'Refreshing...';
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/models', {
+          headers: { 'Authorization': `Bearer ${candidateKey}` }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error?.message || `HTTP ${res.status}`);
+
+        const chatModels = (data.data || [])
+          .filter((m) => m.id && !/whisper|guard|tts|embed|orpheus|playai/i.test(m.id))
+          .map((m) => ({ id: m.id, label: m.id }));
+
+        if (chatModels.length > 0) {
+          const preferred = chatModels.find((m) => m.id === 'openai/gpt-oss-20b')?.id || chatModels[0].id;
+          populateModelSelect(chatModels, preferred);
+          showToast(`Loaded ${chatModels.length} live Groq models!`);
+        }
+      } catch (err) {
+        showToast(`Could not fetch models: ${err.message}`);
+      } finally {
+        refreshModelsBtn.textContent = 'Refresh Models';
+      }
+    });
+
+    testConnectionBtn.addEventListener('click', async () => {
+      const candidateKey = groqKeyInput.value.trim();
+      const candidateProxy = proxyUrlInput.value.trim();
+      const candidateModel = groqModelSelect.value;
+
+      if (!candidateKey && !candidateProxy) {
+        testConnectionResult.className = 'rounded-2xl px-4 py-2.5 text-xs border bg-rose-500/15 border-rose-400/30 text-rose-200';
+        testConnectionResult.textContent = 'Enter a Groq API key or a Public Proxy URL first.';
+        testConnectionResult.classList.remove('hidden');
+        return;
+      }
+
+      testConnectionBtn.disabled = true;
+      testConnectionBtn.textContent = 'Testing...';
+      testConnectionResult.className = 'rounded-2xl px-4 py-2.5 text-xs border bg-solaris-cyan/10 border-solaris-cyan/30 text-cyan-200';
+      testConnectionResult.textContent = `Testing ${candidateModel}...`;
+      testConnectionResult.classList.remove('hidden');
+
+      try {
+        const endpoint = candidateProxy.startsWith('http') ? candidateProxy : 'https://api.groq.com/openai/v1/chat/completions';
+        const headers = { 'Content-Type': 'application/json' };
+        if (!candidateProxy.startsWith('http')) {
+          headers['Authorization'] = `Bearer ${candidateKey}`;
+        }
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            model: candidateModel,
+            messages: [{ role: 'user', content: 'Reply with two words: Core online.' }],
+            max_tokens: 15
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error?.message || `HTTP ${res.status}`);
+
+        const reply = data?.choices?.[0]?.message?.content?.trim() || 'Connected';
+        testConnectionResult.className = 'rounded-2xl px-4 py-2.5 text-xs border bg-emerald-500/15 border-emerald-400/35 text-emerald-200';
+        testConnectionResult.textContent = `Verified! Reply: "${reply}"`;
+      } catch (err) {
+        testConnectionResult.className = 'rounded-2xl px-4 py-2.5 text-xs border bg-rose-500/15 border-rose-400/35 text-rose-200';
+        testConnectionResult.textContent = `Connection failed: ${err.message}`;
+      } finally {
+        testConnectionBtn.disabled = false;
+        testConnectionBtn.textContent = 'Test Connection';
+      }
+    });
+
+    saveKeyVaultBtn.addEventListener('click', () => {
+      state.groqKey = groqKeyInput.value.trim();
+      state.proxyUrl = proxyUrlInput.value.trim();
+      state.groqModel = groqModelSelect.value || 'openai/gpt-oss-20b';
+      state.demoMode = demoModeCheckbox.checked;
+      persistState();
+      closeKeyVault();
+      unlockAudio();
+      showToast('Settings saved! S.O.L.A.R.I.S. is ready.');
+    });
+
+    // =========================================================================
+    // SMART CONTEXT-AWARE AI ENGINE + RICH FORMATTING
+    // =========================================================================
+
+    function extractAutoMemory(userText) {
+      const match = userText.match(/(?:remember that|remember my|note that|don't forget that)\s+(.+)/i);
+      if (match && match[1]) {
+        const fact = match[1].replace(/[.!?]+$/, '').trim();
+        if (fact.length > 3 && fact.length < 140) {
+          state.memoryNotes.unshift({
+            text: fact.charAt(0).toUpperCase() + fact.slice(1),
+            date: new Date().toLocaleDateString([], { month: 'short', day: 'numeric' })
+          });
+          persistState();
+          showToast(`Saved to Memory: "${fact}"`);
+        }
+      }
+    }
+
+    function generateSmartFallbackReply(userText, isVoice) {
+      const lower = userText.toLowerCase();
+      if (lower.includes('fog') && (lower.includes('poem') || lower.includes('english') || lower.includes('class 10') || lower.includes('sandburg'))) {
+        return isVoice
+          ? 'In Class 10 English, Carl Sandburg’s poem Fog compares fog to a quiet cat creeping in on little cat feet, sitting over the harbor and city before silently moving on.'
+          : '### **"Fog" by Carl Sandburg (Class 10 English — First Flight)**\n\n* **Core Metaphor:** The poet compares the arrival and departure of fog to a **quiet, mysterious cat** that comes silently *"on little cat feet."*\n* **Imagery & Setting:** It sits silently *"on silent haunches"* looking over the harbor and city, observing everything calmly before moving on without a sound.\n* **Poetic Devices:** Extended **Metaphor** (fog = cat), **Personification** (sitting and looking), and **Free Verse** (no fixed rhyme scheme).\n\n*(Connect your Groq key or Proxy in Settings for live answers on any subject!)*';
+      }
+      if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+        return isVoice
+          ? 'Hey! I am listening live. Ask me anything, or interrupt me anytime just by speaking.'
+          : 'Hey there! I am **S.O.L.A.R.I.S.** — ready to help with your studies, creative ideas, or everyday questions. *(Currently running in Key-Free Demo Mode.)*';
+      }
+      return isVoice
+        ? `I heard ${userText}. Connect your Groq key or Public Proxy in Settings for full live AI responses.`
+        : `I received **"${userText}"**. Open **API & Public Proxy** in the sidebar (or top right) to connect your Groq key once for full live intelligence.`;
+    }
+
+    async function sendChatCompletion(endpoint, modelId, messages, maxTokens) {
+      const headers = { 'Content-Type': 'application/json' };
+      if (endpoint.type === 'direct') {
+        headers['Authorization'] = `Bearer ${endpoint.key}`;
+      }
+      const response = await fetch(endpoint.url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          model: modelId,
+          messages,
+          temperature: 0.65,
+          max_tokens: maxTokens
+        })
+      });
+      const data = await response.json();
+      return { ok: response.ok, status: response.status, data };
+    }
+
+    async function fetchSolarisReply(userText, isLiveVoice) {
+      extractAutoMemory(userText);
+
+      const endpoint = getActiveEndpoint();
+      if (endpoint.type === 'none') {
+        if (state.demoMode) {
+          await new Promise((r) => setTimeout(r, 450));
+          return generateSmartFallbackReply(userText, isLiveVoice);
+        }
+        if (!isLiveVoice) openKeyVault();
+        return generateSmartFallbackReply(userText, isLiveVoice);
+      }
+
+      const activeMode = MODES[state.mode] || MODES.general;
+      const memoryBlock = state.memoryNotes.length > 0
+        ? `\nGlobal User Memories:\n${state.memoryNotes.map((n, i) => `${i + 1}. ${n.text}`).join('\n')}`
+        : '';
+
+      // Context-aware system prompt that distinguishes literature/academics from literal science
+      const coreIdentity = `You are S.O.L.A.R.I.S. (Smart Omni-Logic & Adaptive Response Intelligence System), an intelligent personal AI companion and academic tutor.
+Important Context Rule: Always interpret the user's true intent accurately. For example, if the user asks about "English Fog poem Class 10" or "Fog poem", explain Carl Sandburg's famous poem "Fog" (its cat metaphor, imagery, themes, and poetic devices)—do NOT give a meteorology/weather explanation of how water vapor condenses.`;
+
+      const systemPrompt = isLiveVoice
+        ? `${coreIdentity}\n${activeMode.voicePrompt}${memoryBlock}`
+        : `${coreIdentity}\n${activeMode.textPrompt}${memoryBlock}`;
+
+      const historySource = isLiveVoice ? state.voiceHistory : getActiveThread().messages;
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        ...historySource.slice(-12).map((m) => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.text
+        })),
+        { role: 'user', content: userText }
+      ];
+
+      let result = await sendChatCompletion(endpoint, state.groqModel, messages, isLiveVoice ? 170 : 750);
+
+      if (!result.ok) {
+        const errMsg = result.data?.error?.message || '';
+        if (/does not exist|decommissioned|not have access/i.test(errMsg)) {
+          const fallbackModel = state.groqModel === 'openai/gpt-oss-20b' ? 'openai/gpt-oss-120b' : 'openai/gpt-oss-20b';
+          result = await sendChatCompletion(endpoint, fallbackModel, messages, isLiveVoice ? 170 : 750);
+          if (result.ok) {
+            state.groqModel = fallbackModel;
+            persistState();
+          }
+        }
+      }
+
+      if (!result.ok) {
+        throw new Error(result.data?.error?.message || `API error (${result.status})`);
+      }
+
+      return result.data?.choices?.[0]?.message?.content?.trim() || 'No response received.';
+    }
+
+    // Safe Markdown-to-HTML formatter for rich AI chat bubbles (bold, italics, lists, code blocks)
+    function formatRichText(rawText) {
+      const escapeHTML = (str) => str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // Extract fenced code blocks first
+      const codeBlocks = [];
+      let processed = rawText.replace(/```(?:\w+)?\n?([\s\S]*?)```/g, (_, code) => {
+        const token = `__CODE_BLOCK_${codeBlocks.length}__`;
+        codeBlocks.push(`<pre><code>${escapeHTML(code.trim())}</code></pre>`);
+        return token;
+      });
+
+      processed = escapeHTML(processed);
+
+      // Inline code
+      processed = processed.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+      // Bold & Italic
+      processed = processed.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      processed = processed.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+      // Headings & Bullet lists line-by-line
+      const lines = processed.split('\n');
+      let html = '';
+      let inList = false;
+
+      lines.forEach((line) => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('### ')) {
+          if (inList) { html += '</ul>'; inList = false; }
+          html += `<h3>${trimmed.slice(4)}</h3>`;
+        } else if (/^[-*•]\s+/.test(trimmed)) {
+          if (!inList) { html += '<ul>'; inList = true; }
+          html += `<li>${trimmed.replace(/^[-*•]\s+/, '')}</li>`;
+        } else if (trimmed === '') {
+          if (inList) { html += '</ul>'; inList = false; }
+        } else {
+          if (inList) { html += '</ul>'; inList = false; }
+          html += `<p>${trimmed}</p>`;
+        }
+      });
+      if (inList) html += '</ul>';
+
+      // Restore code blocks
+      codeBlocks.forEach((block, idx) => {
+        html = html.replace(`__CODE_BLOCK_${idx}__`, block);
+      });
+
+      return html;
+    }
+
+    // =========================================================================
+    // VOICE SYNTHESIS & iOS AUDIO UNLOCK
+    // =========================================================================
+
+    let voicesList = [];
+
+    function loadVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const all = window.speechSynthesis.getVoices();
+      if (!all || !all.length) return;
+      voicesList = all;
+
+      const english = all.filter((v) => v.lang && v.lang.toLowerCase().startsWith('en'));
+      const pool = english.length ? english : all;
+
+      if (!state.selectedVoiceURI) {
+        const preferred = pool.find((v) => /Daniel|Arthur|Google UK English Male|en-GB|Samantha/i.test(v.name + ' ' + v.lang)) || pool[0];
+        if (preferred) state.selectedVoiceURI = preferred.voiceURI;
+      }
+
+      voiceSelect.innerHTML = '';
+      pool.forEach((v) => {
+        const opt = document.createElement('option');
+        opt.value = v.voiceURI;
+        opt.textContent = v.name;
+        if (v.voiceURI === state.selectedVoiceURI) opt.selected = true;
+        voiceSelect.appendChild(opt);
+      });
+    }
+
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    voiceSelect.addEventListener('change', () => {
+      state.selectedVoiceURI = voiceSelect.value;
+      persistState();
+      unlockAudio();
+      speakUtterance('Voice updated.');
+    });
+
+    function unlockAudio() {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        if (!state.audioUnlocked) {
+          const silent = new SpeechSynthesisUtterance('');
+          silent.volume = 0;
+          window.speechSynthesis.speak(silent);
+          state.audioUnlocked = true;
+        }
+      } catch (e) {}
+    }
+
+    function chunkForSpeech(text) {
+      const clean = text.replace(/[*#_`~]/g, '').replace(/\s+/g, ' ').trim();
+      if (!clean) return [];
+      const sentences = clean.match(/[^.!?]+[.!?]*/g) || [clean];
+      const chunks = [];
+      let buf = '';
+      sentences.forEach((s) => {
+        const trimmed = s.trim();
+        if (!trimmed) return;
+        if ((buf + ' ' + trimmed).length > 155 && buf.length > 0) {
+          chunks.push(buf.trim());
+          buf = trimmed;
+        } else {
+          buf = buf ? `${buf} ${trimmed}` : trimmed;
+        }
+      });
+      if (buf.trim()) chunks.push(buf.trim());
+      return chunks;
+    }
+
+    function speakUtterance(text, onDone = null) {
+      if (!('speechSynthesis' in window)) {
+        if (onDone) onDone();
+        return;
+      }
+      try {
+        window.speechSynthesis.cancel();
+        if (!voicesList.length) loadVoices();
+        const chunks = chunkForSpeech(text);
+        if (!chunks.length) {
+          if (onDone) onDone();
+          return;
+        }
+
+        const chosenVoice = voicesList.find((v) => v.voiceURI === state.selectedVoiceURI)
+          || voicesList.find((v) => /Daniel|Arthur|Google UK English Male|en-GB|Samantha/i.test(v.name + ' ' + v.lang))
+          || voicesList.find((v) => v.lang && v.lang.startsWith('en'));
+
+        let index = 0;
+        let cancelledExternally = false;
+
+        window.__abortSolarisSpeech = () => {
+          cancelledExternally = true;
+          window.speechSynthesis.cancel();
+        };
+
+        function speakNext() {
+          if (cancelledExternally) return;
+          if (index >= chunks.length) {
+            if (onDone) onDone();
+            return;
+          }
+
+          const utter = new SpeechSynthesisUtterance(chunks[index]);
+          if (chosenVoice) utter.voice = chosenVoice;
+          utter.rate = 1.04;
+          utter.pitch = 0.99;
+
+          utter.onend = () => {
+            if (cancelledExternally) return;
+            index++;
+            speakNext();
+          };
+          utter.onerror = () => {
+            if (!cancelledExternally && onDone) onDone();
+          };
+
+          window.speechSynthesis.speak(utter);
+        }
+
+        speakNext();
+      } catch (e) {
+        if (onDone) onDone();
+      }
+    }
+
+    // =========================================================================
+    // FULL-SCREEN LIVE VOICE SESSION + HANDS-FREE BARGE-IN
+    // =========================================================================
+
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let liveRecognition = null;
+    let audioCtx = null;
+    let analyserNode = null;
+    let micMediaStream = null;
+    let freqArray = null;
+    let speechStartedAt = 0;
+
+    function setLiveVoiceState(nextState, subtitle = null) {
+      state.liveStatus = nextState;
+      if (subtitle !== null) liveSubtitleText.textContent = subtitle;
+
+      if (nextState === 'listening') {
+        liveStatusTitle.textContent = state.liveMuted ? 'Microphone Muted' : 'Listening...';
+        liveStatusTitle.className = 'text-sm font-semibold tracking-wide text-cyan-200 mt-1';
+        liveOrbHalo.style.transform = 'scale(1.22)';
+      } else if (nextState === 'thinking') {
+        liveStatusTitle.textContent = 'Thinking...';
+        liveStatusTitle.className = 'text-sm font-semibold tracking-wide text-sky-300 mt-1';
+        liveOrbHalo.style.transform = 'scale(1.08)';
+      } else if (nextState === 'speaking') {
+        liveStatusTitle.textContent = 'Speaking • Speak or tap orb to interrupt';
+        liveStatusTitle.className = 'text-sm font-semibold tracking-wide text-solaris-cyan mt-1';
+        liveOrbHalo.style.transform = 'scale(1.18)';
+      } else {
+        liveStatusTitle.textContent = 'Ready';
+        liveOrbHalo.style.transform = 'scale(1)';
+      }
+    }
+
+    async function initLiveAudioMonitor() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+      try {
+        if (!audioCtx) {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new Ctx();
+        }
+        if (audioCtx.state === 'suspended') {
+          await audioCtx.resume();
+        }
+        if (!micMediaStream) {
+          micMediaStream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+            video: false
+          });
+          const src = audioCtx.createMediaStreamSource(micMediaStream);
+          analyserNode = audioCtx.createAnalyser();
+          analyserNode.fftSize = 64;
+          freqArray = new Uint8Array(analyserNode.frequencyBinCount);
+          src.connect(analyserNode);
+        }
+      } catch (e) {}
+    }
+
+    function teardownLiveAudioMonitor() {
+      if (micMediaStream) {
+        micMediaStream.getTracks().forEach((t) => t.stop());
+        micMediaStream = null;
+        analyserNode = null;
+      }
+      state.micEnergy = 0;
+    }
+
+    function interruptSolarisSpeech() {
+      if (window.__abortSolarisSpeech) window.__abortSolarisSpeech();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (state.liveActive && !state.liveMuted) {
+        setLiveVoiceState('listening', 'Listening...');
+        startLiveRecognition();
+      }
+    }
+
+    function startLiveRecognition() {
+      if (!state.liveActive || state.liveMuted) return;
+      if (!SpeechRec) {
+        setLiveVoiceState('idle', 'Live speech recognition works in Safari on iPad or Chrome on Android/Desktop.');
+        return;
+      }
+
+      if (liveRecognition) {
+        try { liveRecognition.abort(); } catch (e) {}
+      }
+
+      liveRecognition = new SpeechRec();
+      liveRecognition.lang = 'en-US';
+      liveRecognition.interimResults = true;
+      liveRecognition.maxAlternatives = 1;
+
+      let finalTranscript = '';
+
+      liveRecognition.onstart = () => {
+        if (state.liveActive && state.liveStatus !== 'speaking') {
+          setLiveVoiceState('listening');
+        }
+      };
+
+      liveRecognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const piece = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalTranscript += piece;
+          else interim += piece;
+        }
+
+        const display = (finalTranscript || interim).trim();
+        if (display) {
+          if (state.liveStatus === 'speaking') {
+            if (window.__abortSolarisSpeech) window.__abortSolarisSpeech();
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            setLiveVoiceState('listening');
+          }
+          liveSubtitleText.textContent = `"${display}"`;
+        }
+      };
+
+      liveRecognition.onerror = (event) => {
+        if (!state.liveActive || state.liveMuted) return;
+        if (event.error === 'not-allowed') {
+          setLiveVoiceState('idle', 'Microphone permission blocked. Allow mic access in browser settings.');
+          return;
+        }
+        if ((event.error === 'no-speech' || event.error === 'aborted') && state.liveStatus === 'listening') {
+          setTimeout(() => {
+            if (state.liveActive && !state.liveMuted && state.liveStatus === 'listening') {
+              startLiveRecognition();
+            }
+          }, 250);
+        }
+      };
+
+      liveRecognition.onend = async () => {
+        if (!state.liveActive || state.liveMuted) return;
+        const spoken = finalTranscript.trim();
+        if (spoken) {
+          if (/^(end voice|exit voice|goodbye solaris|stop live)$/i.test(spoken)) {
+            closeLiveVoiceSession();
+            return;
+          }
+          await processLiveVoiceTurn(spoken);
+        } else if (state.liveStatus === 'listening') {
+          setTimeout(() => {
+            if (state.liveActive && !state.liveMuted && state.liveStatus === 'listening') {
+              startLiveRecognition();
+            }
+          }, 220);
+        }
+      };
+
+      try {
+        liveRecognition.start();
+      } catch (e) {}
+    }
+
+    async function processLiveVoiceTurn(spokenText) {
+      if (!state.liveActive) return;
+      setLiveVoiceState('thinking', `"${spokenText}"`);
+      state.voiceHistory.push({ role: 'user', text: spokenText });
+
+      let reply = '';
+      try {
+        reply = await fetchSolarisReply(spokenText, true);
+      } catch (err) {
+        reply = `Sorry, I hit a connection error: ${err.message}`;
+      }
+
+      if (!state.liveActive) return;
+      state.voiceHistory.push({ role: 'assistant', text: reply });
+      if (state.voiceHistory.length > 14) state.voiceHistory = state.voiceHistory.slice(-14);
+
+      speechStartedAt = performance.now();
+      setLiveVoiceState('speaking', reply);
+
+      speakUtterance(reply, () => {
+        if (state.liveActive && !state.liveMuted) {
+          setLiveVoiceState('listening', 'Listening...');
+          startLiveRecognition();
+        }
+      });
+    }
+
+    async function openLiveVoiceSession() {
+      if (state.barDictating && barRecognition) {
+        try { barRecognition.stop(); } catch (e) {}
+      }
+      unlockAudio();
+      state.liveActive = true;
+      state.liveMuted = false;
+      liveMuteLabel.textContent = 'Mute';
+      liveVoiceOverlay.classList.remove('hidden');
+
+      await initLiveAudioMonitor();
+      setLiveVoiceState('listening', 'Listening... Speak naturally anytime.');
+      startLiveRecognition();
+    }
+
+    function closeLiveVoiceSession() {
+      state.liveActive = false;
+      state.liveMuted = false;
+      if (window.__abortSolarisSpeech) window.__abortSolarisSpeech();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (liveRecognition) {
+        try { liveRecognition.abort(); } catch (e) {}
+      }
+      teardownLiveAudioMonitor();
+      liveVoiceOverlay.classList.add('hidden');
+      setLiveVoiceState('idle');
+    }
+
+    headerVoiceOrbBtn.addEventListener('click', openLiveVoiceSession);
+    endLiveVoiceBtn.addEventListener('click', closeLiveVoiceSession);
+
+    liveOrbTrigger.addEventListener('click', () => {
+      unlockAudio();
+      if (state.liveStatus === 'speaking') {
+        interruptSolarisSpeech();
+      } else if (state.liveStatus !== 'thinking' && !state.liveMuted) {
+        startLiveRecognition();
+      }
+    });
+
+    liveMuteBtn.addEventListener('click', () => {
+      state.liveMuted = !state.liveMuted;
+      if (state.liveMuted) {
+        liveMuteLabel.textContent = 'Unmute';
+        if (liveRecognition) {
+          try { liveRecognition.abort(); } catch (e) {}
+        }
+        setLiveVoiceState('listening', 'Microphone muted. Tap Unmute to continue.');
+      } else {
+        liveMuteLabel.textContent = 'Mute';
+        setLiveVoiceState('listening', 'Listening...');
+        startLiveRecognition();
+      }
+    });
+
+    // =========================================================================
+    // BOTTOM SEARCH / MESSAGE BAR -> SILENT RICH TEXT BUBBLES
+    // =========================================================================
+
+    let barRecognition = null;
+    if (SpeechRec) {
+      barRecognition = new SpeechRec();
+      barRecognition.lang = 'en-US';
+      barRecognition.interimResults = true;
+      barRecognition.maxAlternatives = 1;
+
+      barRecognition.onstart = () => {
+        state.barDictating = true;
+        barDictateBtn.classList.add('bg-solaris-cyan/25', 'text-white', 'ring-2', 'ring-solaris-cyan/60');
+        promptInput.placeholder = 'Listening for text message...';
+      };
+
+      barRecognition.onresult = (event) => {
+        let text = '';
+        for (let i = 0; i < event.results.length; i++) {
+          text += event.results[i][0].transcript;
+        }
+        promptInput.value = text.trim();
+      };
+
+      barRecognition.onend = () => {
+        state.barDictating = false;
+        barDictateBtn.classList.remove('bg-solaris-cyan/25', 'text-white', 'ring-2', 'ring-solaris-cyan/60');
+        promptInput.placeholder = 'Ask S.O.L.A.R.I.S. anything...';
+        const dictatedText = promptInput.value.trim();
+        if (dictatedText) {
+          promptInput.value = '';
+          submitTextChatMessage(dictatedText);
+        }
+      };
+
+      barRecognition.onerror = () => {
+        state.barDictating = false;
+        barDictateBtn.classList.remove('bg-solaris-cyan/25', 'text-white', 'ring-2', 'ring-solaris-cyan/60');
+        promptInput.placeholder = 'Ask S.O.L.A.R.I.S. anything...';
+      };
+    }
+
+    barDictateBtn.addEventListener('click', () => {
+      if (!barRecognition) {
+        showToast('Dictation works in Safari on iPad or Chrome on Android/Desktop.');
+        promptInput.focus();
+        return;
+      }
+      if (state.barDictating) {
+        barRecognition.stop();
+      } else {
+        try { barRecognition.start(); } catch (e) {}
+      }
+    });
+
+    function createMessageBubble(msg) {
+      const isUser = msg.role === 'user';
+      const row = document.createElement('div');
+      row.className = `bubble-animate flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`;
+
+      if (!isUser) {
+        const avatar = document.createElement('div');
+        avatar.className = 'w-6 h-6 rounded-full bg-gradient-to-tr from-solaris-cobalt to-solaris-cyan p-[1px] flex-shrink-0 mb-1 shadow-[0_0_12px_rgba(0,229,255,0.45)]';
+        avatar.innerHTML = `<div class="w-full h-full rounded-full bg-abyss-950 flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-solaris-cyan"></span></div>`;
+        row.appendChild(avatar);
+      }
+
+      const bubble = document.createElement('div');
+      bubble.className = isUser
+        ? 'bubble-user max-w-[84%] sm:max-w-[74%] px-4.5 py-3 text-white font-normal whitespace-pre-wrap break-words'
+        : 'bubble-ai max-w-[88%] sm:max-w-[78%] px-4.5 py-3.5 text-slate-100 font-normal break-words';
+      bubble.style.paddingLeft = '18px';
+      bubble.style.paddingRight = '18px';
+
+      if (isUser) {
+        bubble.textContent = msg.text;
+      } else {
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'ai-rich-text';
+        contentDiv.innerHTML = formatRichText(msg.text);
+        bubble.appendChild(contentDiv);
+
+        // Footer bar inside AI bubble: Read Aloud + Copy buttons
+        const footer = document.createElement('div');
+        footer.className = 'mt-2 pt-1.5 border-t border-white/[0.06] flex items-center justify-end gap-1.5';
+
+        const speakBtn = document.createElement('button');
+        speakBtn.type = 'button';
+        speakBtn.title = 'Read Aloud';
+        speakBtn.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/[0.05] hover:bg-solaris-cyan/20 text-solaris-cyan/85 hover:text-solaris-cyan transition';
+        speakBtn.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07" /></svg><span>Speak</span>`;
+        speakBtn.addEventListener('click', () => {
+          unlockAudio();
+          speakUtterance(msg.text);
+        });
+
+        const copyBtn = document.createElement('button');
+        copyBtn.type = 'button';
+        copyBtn.title = 'Copy Reply';
+        copyBtn.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/[0.05] hover:bg-white/10 text-slate-400 hover:text-white transition';
+        copyBtn.textContent = 'Copy';
+        copyBtn.addEventListener('click', () => {
+          const ta = document.createElement('textarea');
+          ta.value = msg.text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
+        });
+
+        footer.appendChild(speakBtn);
+        footer.appendChild(copyBtn);
+        bubble.appendChild(footer);
+      }
+
+      row.appendChild(bubble);
+      return row;
+    }
+
+    function renderAllMessages() {
+      const activeThread = getActiveThread();
+      chatFeed.innerHTML = '';
+
+      if (activeThread.messages.length === 0) {
+        const welcome = document.createElement('div');
+        welcome.className = 'my-auto text-center max-w-md mx-auto px-4 py-8';
+        welcome.innerHTML = `
+          <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-tr from-solaris-cobalt/30 to-solaris-cyan/30 border border-solaris-cyan/40 flex items-center justify-center shadow-[0_0_24px_rgba(0,229,255,0.25)]">
+            <span class="w-3.5 h-3.5 rounded-full bg-solaris-cyan animate-pulse"></span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-bold text-white mb-1.5">How can I help you today?</h2>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-5">
+            Type below for detailed answers, or tap <strong class="text-solaris-cyan">Live Voice</strong> in the top bar to talk hands-free.
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <button type="button" data-starter="Explain the Class 10 English poem Fog by Carl Sandburg"
+              class="starter-chip px-3.5 py-2 rounded-full text-xs bg-white/[0.04] hover:bg-solaris-cyan/15 border border-white/10 hover:border-solaris-cyan/40 text-slate-200 transition">
+              Class 10 English: Fog Poem
+            </button>
+            <button type="button" data-starter="Give me 3 cool Marvel story ideas"
+              class="starter-chip px-3.5 py-2 rounded-full text-xs bg-white/[0.04] hover:bg-solaris-cyan/15 border border-white/10 hover:border-solaris-cyan/40 text-slate-200 transition">
+              Marvel Story Ideas
+            </button>
+          </div>
+        `;
+        chatFeed.appendChild(welcome);
+
+        welcome.querySelectorAll('.starter-chip').forEach((chip) => {
+          chip.addEventListener('click', () => {
+            const prompt = chip.getAttribute('data-starter');
+            if (prompt.toLowerCase().includes('class 10') || prompt.toLowerCase().includes('explain')) {
+              state.mode = 'tutor';
+              updateModeUI();
+            }
+            submitTextChatMessage(prompt);
+          });
+        });
+        return;
+      }
+
+      activeThread.messages.forEach((msg) => {
+        chatFeed.appendChild(createMessageBubble(msg));
+      });
+      chatFeed.scrollTop = chatFeed.scrollHeight;
+    }
+
+    function showThinkingBubble() {
+      const row = document.createElement('div');
+      row.id = 'thinkingIndicator';
+      row.className = 'bubble-animate flex items-end gap-2.5 justify-start';
+      row.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-solaris-cobalt to-solaris-cyan p-[1px] flex-shrink-0 mb-1 shadow-[0_0_12px_rgba(0,229,255,0.45)]">
+          <div class="w-full h-full rounded-full bg-abyss-950 flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-solaris-cyan"></span></div>
+        </div>
+        <div class="bubble-ai px-5 py-3.5 flex items-center gap-1.5">
+          <span class="thinking-dot w-2 h-2 rounded-full bg-solaris-cyan"></span>
+          <span class="thinking-dot w-2 h-2 rounded-full bg-solaris-sky"></span>
+          <span class="thinking-dot w-2 h-2 rounded-full bg-solaris-cobalt"></span>
+        </div>
+      `;
+      chatFeed.appendChild(row);
+      chatFeed.scrollTop = chatFeed.scrollHeight;
+    }
+
+    function removeThinkingBubble() {
+      const el = document.getElementById('thinkingIndicator');
+      if (el) el.remove();
+    }
+
+    let textBusy = false;
+    async function submitTextChatMessage(text) {
+      if (!text || textBusy) return;
+      textBusy = true;
+
+      const activeThread = getActiveThread();
+      if (activeThread.messages.length === 0) {
+        chatFeed.innerHTML = '';
+        activeThread.title = autoGenerateThreadTitle(text);
+      }
+
+      const userMsg = { role: 'user', text };
+      activeThread.messages.push(userMsg);
+      activeThread.updatedAt = Date.now();
+      chatFeed.appendChild(createMessageBubble(userMsg));
+      chatFeed.scrollTop = chatFeed.scrollHeight;
+      persistState();
+
+      showThinkingBubble();
+
+      let replyText = '';
+      try {
+        replyText = await fetchSolarisReply(text, false);
+      } catch (err) {
+        replyText = `Connection issue: ${err.message}. Check your API Key or Proxy settings.`;
+        showToast(err.message);
+      }
+
+      removeThinkingBubble();
+
+      const aiMsg = { role: 'assistant', text: replyText };
+      activeThread.messages.push(aiMsg);
+      activeThread.updatedAt = Date.now();
+      chatFeed.appendChild(createMessageBubble(aiMsg));
+      chatFeed.scrollTop = chatFeed.scrollHeight;
+      persistState();
+      textBusy = false;
+    }
+
+    composerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = promptInput.value.trim();
+      if (!val) return;
+      promptInput.value = '';
+      submitTextChatMessage(val);
+    });
+
+    // =========================================================================
+    // PERSISTENT GLOBAL MEMORY VAULT DRAWER
+    // =========================================================================
+
+    function renderMemoryVault() {
+      memoryCountBadge.textContent = state.memoryNotes.length;
+      memoryNotesList.innerHTML = '';
+
+      if (state.memoryNotes.length === 0) {
+        memoryNotesList.innerHTML = `
+          <div class="rounded-2xl border border-dashed border-white/10 p-4 text-center text-xs text-slate-400">
+            No saved memories yet. Say "remember that..." in any chat or add notes above so S.O.L.A.R.I.S. remembers them everywhere.
+          </div>
+        `;
+        return;
+      }
+
+      state.memoryNotes.forEach((note, index) => {
+        const card = document.createElement('div');
+        card.className = 'rounded-2xl bg-abyss-850/90 border border-white/10 p-3.5 flex items-start justify-between gap-2';
+        const safe = document.createElement('div');
+        safe.className = 'flex-1 min-w-0';
+        const p = document.createElement('p');
+        p.className = 'text-xs text-slate-200 break-words leading-relaxed';
+        p.textContent = note.text;
+        const d = document.createElement('span');
+        d.className = 'text-[10px] text-slate-500 mt-1 block';
+        d.textContent = note.date;
+        safe.appendChild(p);
+        safe.appendChild(d);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'text-slate-500 hover:text-rose-400 p-1 text-base leading-none';
+        delBtn.innerHTML = '&times;';
+        delBtn.addEventListener('click', () => {
+          state.memoryNotes.splice(index, 1);
+          persistState();
+        });
+
+        card.appendChild(safe);
+        card.appendChild(delBtn);
+        memoryNotesList.appendChild(card);
+      });
+    }
+
+    function openMemoryDrawer() {
+      closeSidebarMobile();
+      memoryBackdrop.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        memoryBackdrop.classList.remove('opacity-0');
+        memoryDrawer.classList.remove('translate-x-full');
+      });
+    }
+
+    function closeMemoryDrawer() {
+      memoryBackdrop.classList.add('opacity-0');
+      memoryDrawer.classList.add('translate-x-full');
+      setTimeout(() => memoryBackdrop.classList.add('hidden'), 250);
+    }
+
+    sidebarMemoryBtn.addEventListener('click', openMemoryDrawer);
+    closeMemoryBtn.addEventListener('click', closeMemoryDrawer);
+    memoryBackdrop.addEventListener('click', closeMemoryDrawer);
+
+    addMemoryForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const note = memoryNoteInput.value.trim();
+      if (!note) return;
+      state.memoryNotes.unshift({
+        text: note,
+        date: new Date().toLocaleDateString([], { month: 'short', day: 'numeric' })
+      });
+      memoryNoteInput.value = '';
+      persistState();
+      showToast('Saved to Global Memory');
+    });
+
+    clearNotesBtn.addEventListener('click', () => {
+      state.memoryNotes = [];
+      persistState();
+    });
+
+    // =========================================================================
+    // 60FPS FLUID LIQUID-LIGHT PLASMA ORBS (COMPACT TOP ORB + LIVE VOICE ORB)
+    // =========================================================================
+
+    let loudFrames = 0;
+
+    function sampleAudioAndCheckBargeIn() {
+      if (!state.liveActive || state.liveMuted) {
+        state.micEnergy *= 0.85;
+        return state.micEnergy;
+      }
+
+      if (analyserNode && freqArray) {
+        analyserNode.getByteFrequencyData(freqArray);
+        let sum = 0;
+        for (let i = 0; i < freqArray.length; i++) sum += freqArray[i];
+        const avg = sum / freqArray.length;
+        const normalized = Math.min(1, avg / 85);
+        state.micEnergy += (normalized - state.micEnergy) * 0.35;
+
+        // Hands-free voice barge-in after 550ms grace period
+        if (state.liveStatus === 'speaking' && performance.now() - speechStartedAt > 550) {
+          if (normalized > 0.42) {
+            loudFrames++;
+            if (loudFrames >= 10) {
+              loudFrames = 0;
+              interruptSolarisSpeech();
+            }
+          } else {
+            loudFrames = Math.max(0, loudFrames - 1);
+          }
+        } else {
+          loudFrames = 0;
+        }
+      } else if (state.liveStatus === 'listening') {
+        const t = performance.now() * 0.006;
+        state.micEnergy = 0.22 + 0.16 * Math.sin(t) * Math.cos(t * 0.7);
+      } else {
+        state.micEnergy *= 0.85;
+      }
+
+      if (state.liveActive) {
+        const energy = state.liveStatus === 'speaking'
+          ? 0.35 + 0.45 * Math.abs(Math.sin(performance.now() * 0.008))
+          : state.micEnergy;
+        waveBars.forEach((bar, idx) => {
+          const factor = 1 - Math.abs(idx - 3) * 0.18;
+          const heightPx = Math.max(6, Math.round(6 + energy * 24 * factor));
+          bar.style.height = `${heightPx}px`;
+        });
+      }
+
+      return state.micEnergy;
+    }
+
+    function drawOrganicBlob(ctx, cx, cy, baseR, phase, deformAmp, lobes, fillStyle, composite = 'source-over') {
+      const points = 64;
+      ctx.save();
+      ctx.globalCompositeOperation = composite;
+      ctx.beginPath();
+
+      for (let i = 0; i <= points; i++) {
+        const theta = (i / points) * Math.PI * 2;
+        const wave1 = Math.sin(theta * lobes + phase);
+        const wave2 = Math.cos(theta * (lobes + 1) - phase * 1.35);
+        const offset = (wave1 * 0.6 + wave2 * 0.4) * baseR * deformAmp;
+        const r = baseR + offset;
+        const x = cx + Math.cos(theta) * r;
+        const y = cy + Math.sin(theta) * r;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+
+      ctx.closePath();
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function renderPlasmaSphere(ctx, w, h, anim, modeState, energy) {
+      const cx = w / 2;
+      const cy = h / 2;
+      const baseRadius = Math.min(w, h) * 0.32;
+
+      let targetSpeed = 1.0;
+      let targetDeform = 0.06;
+      let targetScale = 1.0 + Math.sin(anim.time * 0.8) * 0.03;
+      let targetSwirl = 0.4;
+
+      if (modeState === 'listening') {
+        targetSpeed = 1.7 + energy * 1.5;
+        targetDeform = 0.085 + energy * 0.24;
+        targetScale = 1.05 + energy * 0.22;
+        targetSwirl = 0.7;
+      } else if (modeState === 'thinking') {
+        targetSpeed = 2.9;
+        targetDeform = 0.12;
+        targetScale = 1.04;
+        targetSwirl = 1.65;
+      } else if (modeState === 'speaking') {
+        const speechCadence = Math.abs(Math.sin(anim.time * 3.5) * Math.cos(anim.time * 2.1));
+        targetSpeed = 2.1;
+        targetDeform = 0.08 + speechCadence * 0.16;
+        targetScale = 1.04 + speechCadence * 0.15;
+        targetSwirl = 0.85;
+      }
+
+      anim.speed += (targetSpeed - anim.speed) * 0.08;
+      anim.deform += (targetDeform - anim.deform) * 0.1;
+      anim.scale += (targetScale - anim.scale) * 0.12;
+      anim.swirl += (targetSwirl - anim.swirl) * 0.08;
+      anim.time += 0.024 * anim.speed;
+
+      ctx.clearRect(0, 0, w, h);
+      const r = baseRadius * anim.scale;
+
+      if (modeState === 'speaking' || modeState === 'listening') {
+        anim.pulseRing = (anim.pulseRing + 0.018) % 1;
+        const waveR = r * (1.06 + anim.pulseRing * 0.68);
+        const waveAlpha = (1 - anim.pulseRing) * 0.36;
+        ctx.beginPath();
+        ctx.arc(cx, cy, waveR, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(0, 229, 255, ${waveAlpha})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      const gradCobalt = ctx.createRadialGradient(cx - r * 0.25, cy - r * 0.25, r * 0.1, cx, cy, r * 1.25);
+      gradCobalt.addColorStop(0, 'rgba(56, 189, 248, 0.88)');
+      gradCobalt.addColorStop(0.55, 'rgba(37, 99, 235, 0.75)');
+      gradCobalt.addColorStop(1, 'rgba(30, 64, 175, 0.05)');
+      drawOrganicBlob(ctx, cx, cy, r * 1.12, anim.time * 0.9, anim.deform * 1.15, 3, gradCobalt, 'screen');
+
+      const ox1 = Math.cos(anim.time * anim.swirl) * r * 0.12;
+      const oy1 = Math.sin(anim.time * anim.swirl) * r * 0.12;
+      const gradCyan = ctx.createRadialGradient(cx + ox1, cy + oy1, r * 0.05, cx, cy, r * 1.05);
+      gradCyan.addColorStop(0, 'rgba(224, 252, 255, 0.96)');
+      gradCyan.addColorStop(0.45, 'rgba(0, 229, 255, 0.9)');
+      gradCyan.addColorStop(0.85, 'rgba(14, 165, 233, 0.38)');
+      gradCyan.addColorStop(1, 'rgba(0, 229, 255, 0)');
+      drawOrganicBlob(ctx, cx + ox1 * 0.5, cy + oy1 * 0.5, r * 0.98, -anim.time * 1.15, anim.deform, 4, gradCyan, 'screen');
+
+      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 0.62);
+      coreGrad.addColorStop(0, 'rgba(255, 255, 255, 0.98)');
+      coreGrad.addColorStop(0.55, 'rgba(186, 248, 255, 0.58)');
+      coreGrad.addColorStop(1, 'rgba(0, 229, 255, 0)');
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 0.62, 0, Math.PI * 2);
+      ctx.fillStyle = coreGrad;
+      ctx.fill();
+    }
+
+    function startCanvases() {
+      const miniCanvas = document.getElementById('miniOrbCanvas');
+      const miniCtx = miniCanvas.getContext('2d');
+      const liveCanvas = document.getElementById('liveOrbCanvas');
+      const liveCtx = liveCanvas.getContext('2d');
+
+      const miniAnim = { time: 0, speed: 1, deform: 0.06, scale: 1, swirl: 0.4, pulseRing: 0 };
+      const liveAnim = { time: 1.5, speed: 1, deform: 0.06, scale: 1, swirl: 0.4, pulseRing: 0 };
+
+      function syncCanvasSizes() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        miniCanvas.width = 24 * dpr;
+        miniCanvas.height = 24 * dpr;
+        miniCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const r2 = liveOrbTrigger.getBoundingClientRect();
+        if (r2.width > 0) {
+          liveCanvas.width = r2.width * dpr;
+          liveCanvas.height = r2.height * dpr;
+          liveCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+      }
+      syncCanvasSizes();
+      window.addEventListener('resize', syncCanvasSizes);
+
+      function loop() {
+        const energy = sampleAudioAndCheckBargeIn();
+
+        // Compact Top-Bar Orb
+        renderPlasmaSphere(miniCtx, 24, 24, miniAnim, 'idle', 0);
+
+        // Full-Screen Live Voice Orb
+        if (state.liveActive) {
+          const r2 = liveOrbTrigger.getBoundingClientRect();
+          if (r2.width === 0 || liveCanvas.width === 0) syncCanvasSizes();
+          renderPlasmaSphere(liveCtx, r2.width || 260, r2.height || 260, liveAnim, state.liveStatus, energy);
+        }
+
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    }
+
+    // --- Boot App ---
+    window.addEventListener('DOMContentLoaded', () => {
+      syncConnectionStatus();
+      updateModeUI();
+      renderSidebarThreads();
+      renderMemoryVault();
+      renderAllMessages();
+      startCanvases();
+    });
+  </script>
+</body>
+</html>
